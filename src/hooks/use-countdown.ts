@@ -10,10 +10,24 @@ export interface CountdownValue {
   isComplete: boolean;
 }
 
-function getTimeLeft(targetDate: string): CountdownValue {
-  const diff = new Date(targetDate).getTime() - Date.now();
+function resolveTargetMs(target: number | string): number {
+  if (typeof target === "number") {
+    return target;
+  }
 
-  if (diff <= 0) {
+  const asNumber = Number(target);
+  if (!Number.isNaN(asNumber) && target.trim() !== "") {
+    return asNumber;
+  }
+
+  return new Date(target).getTime();
+}
+
+function getTimeLeft(target: number | string): CountdownValue {
+  const targetMs = resolveTargetMs(target);
+  const diff = targetMs - Date.now();
+
+  if (!Number.isFinite(targetMs) || diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true };
   }
 
@@ -25,17 +39,33 @@ function getTimeLeft(targetDate: string): CountdownValue {
   return { days, hours, minutes, seconds, isComplete: false };
 }
 
-export function useCountdown(targetDate: string): CountdownValue {
-  const [timeLeft, setTimeLeft] = useState<CountdownValue>(() =>
-    getTimeLeft(targetDate)
-  );
+export function useCountdown(target: number | string): CountdownValue {
+  const [timeLeft, setTimeLeft] = useState<CountdownValue>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isComplete: false,
+  });
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    const tick = () => setTimeLeft(getTimeLeft(targetDate));
+    setHasMounted(true);
+    const tick = () => setTimeLeft(getTimeLeft(target));
     tick();
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
-  }, [targetDate]);
+  }, [target]);
+
+  if (!hasMounted) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isComplete: false,
+    };
+  }
 
   return timeLeft;
 }

@@ -147,4 +147,101 @@
   .section-padding {
     @apply px-5 py-20 sm:px-8 md:px-12 lg:py-28;
   }
+
+  .invitation-details {
+    position: relative;
+    color: #ffffff;
+    background-color: #050505;
+  }
+
+  .invitation-details::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url("/images/invitation-bg.png");
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+
+  .invitation-details::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: rgba(0, 0, 0, 0.58);
+  }
+
+  .invitation-details > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .invitation-details .text-ink {
+    color: #ffffff;
+  }
+
+  .invitation-details .text-muted-foreground {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .invitation-details .text-gold-deep {
+    color: #e8d5b0;
+  }
+
+  .invitation-details .text-gold {
+    color: #e8d5b0;
+  }
+
+  .invitation-details .glass {
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+  }
+
+  .invitation-details .border-gold\/15,
+  .invitation-details .border-gold\/20,
+  .invitation-details .border-gold\/25,
+  .invitation-details .border-gold\/30,
+  .invitation-details .border-gold\/35 {
+    border-color: rgba(232, 213, 176, 0.35);
+  }
+
+  .invitation-details input,
+  .invitation-details textarea,
+  .invitation-details button[data-slot="select-trigger"] {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+  }
+
+  .invitation-details input::placeholder,
+  .invitation-details textarea::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .invitation-details label {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .invitation-details footer {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .invitation-details .bg-white\/80,
+  .invitation-details .bg-white\/70 {
+    background-color: rgba(0, 0, 0, 0.45) !important;
+  }
+
+  .invitation-details .bg-gold\/10 {
+    background-color: rgba(232, 213, 176, 0.15) !important;
+  }
+
+  .invitation-details .text-muted-foreground\/80 {
+    color: rgba(255, 255, 255, 0.65);
+  }
 }

@@ -37,7 +37,10 @@ export interface WeddingConfig {
   monogram: string;
   tagline: string;
   weddingDate: string;
+  weddingTimestamp: number;
   weddingDateDisplay: string;
+  weddingDateLine: string;
+  weddingTimeLine: string;
   venue: {
     name: string;
     address: string;

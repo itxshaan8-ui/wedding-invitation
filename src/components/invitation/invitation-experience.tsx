@@ -8,7 +8,6 @@ import { GallerySection } from "@/components/invitation/gallery-section";
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { LandingHero } from "@/components/invitation/landing-hero";
 import { MusicPlayer } from "@/components/invitation/music-player";
-import { RsvpSection } from "@/components/invitation/rsvp-section";
 import { SiteFooter } from "@/components/invitation/site-footer";
 import { TimelineSection } from "@/components/invitation/timeline-section";
 import { VenueSection } from "@/components/invitation/venue-section";
@@ -40,15 +39,15 @@ export function InvitationExperience() {
           <motion.div
             key="invitation"
             id="main-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            className="invitation-details min-h-dvh"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
             <InvitationCard />
             <TimelineSection events={weddingConfig.timeline} />
             <GallerySection images={weddingConfig.gallery} />
             <VenueSection venue={weddingConfig.venue} />
-            <RsvpSection />
             <ContactSection contacts={weddingConfig.contacts} />
             <SiteFooter />
           </motion.div>

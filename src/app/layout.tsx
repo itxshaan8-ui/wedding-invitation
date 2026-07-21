@@ -22,8 +22,8 @@ const poppins = Poppins({
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-const title = `${weddingConfig.bride} & ${weddingConfig.groom} | Wedding Invitation`;
-const description = `${weddingConfig.tagline} for the wedding of ${weddingConfig.bride} and ${weddingConfig.groom} on ${weddingConfig.weddingDateDisplay} at ${weddingConfig.venue.name}.`;
+const title = `${weddingConfig.groom} & ${weddingConfig.bride} | Wedding Invitation`;
+const description = `${weddingConfig.tagline} for the wedding of ${weddingConfig.groom} and ${weddingConfig.bride} on ${weddingConfig.weddingDateDisplay} at ${weddingConfig.venue.name}.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -31,12 +31,12 @@ export const metadata: Metadata = {
   description,
   keywords: [
     "wedding invitation",
-    weddingConfig.bride,
     weddingConfig.groom,
+    weddingConfig.bride,
     weddingConfig.venue.city,
     "RSVP",
   ],
-  authors: [{ name: `${weddingConfig.bride} & ${weddingConfig.groom}` }],
+  authors: [{ name: `${weddingConfig.groom} & ${weddingConfig.bride}` }],
   openGraph: {
     title,
     description,
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         url: weddingConfig.gallery[0]?.src ?? "/og.jpg",
         width: 1200,
         height: 800,
-        alt: `${weddingConfig.bride} and ${weddingConfig.groom}`,
+        alt: `${weddingConfig.groom} and ${weddingConfig.bride}`,
       },
     ],
   },

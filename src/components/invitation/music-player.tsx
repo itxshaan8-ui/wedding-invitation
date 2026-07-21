@@ -91,7 +91,7 @@ export function MusicPlayer({ enabled, className }: MusicPlayerProps) {
         onClick={toggleMute}
         aria-label={isMuted ? "Unmute background music" : "Mute background music"}
         aria-pressed={!isMuted}
-        className="size-12 rounded-full border-gold/30 bg-white/70 shadow-lg backdrop-blur-md hover:bg-white/90"
+        className="size-12 rounded-full border-gold/40 bg-black/50 text-white shadow-lg backdrop-blur-md hover:bg-black/70"
       >
         {isMuted || !isReady ? (
           <VolumeX className="size-5 text-gold-deep" />
