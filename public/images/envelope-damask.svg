@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Soft contact shadow under the raised ridge -->
+  <path
+    transform="translate(1.1 1.45)"
+    stroke="#8b6f3a"
+    stroke-opacity="0.12"
+    stroke-width="2.6"
+    stroke-linejoin="round"
+    d="M40 8c2.6 9.8 9.8 17 19.6 19.6C49.8 30.2 42.6 37.4 40 47.2 37.4 37.4 30.2 30.2 20.4 27.6 30.2 25 37.4 17.8 40 8z"
+  />
+  <circle
+    cx="41.1"
+    cy="29.05"
+    r="2.6"
+    stroke="#8b6f3a"
+    stroke-opacity="0.1"
+    stroke-width="2.1"
+  />
+
+  <!-- Dark face of the raised border (SE) -->
+  <path
+    transform="translate(0.65 0.85)"
+    stroke="#a07a42"
+    stroke-opacity="0.22"
+    stroke-width="1.45"
+    stroke-linejoin="round"
+    d="M40 8c2.6 9.8 9.8 17 19.6 19.6C49.8 30.2 42.6 37.4 40 47.2 37.4 37.4 30.2 30.2 20.4 27.6 30.2 25 37.4 17.8 40 8z"
+  />
+  <circle
+    cx="40.65"
+    cy="28.45"
+    r="2.6"
+    stroke="#a07a42"
+    stroke-opacity="0.2"
+    stroke-width="1.25"
+  />
+
+  <!-- Light face of the raised border (NW) -->
+  <path
+    transform="translate(-0.6 -0.75)"
+    stroke="#f7ebda"
+    stroke-opacity="0.38"
+    stroke-width="1.45"
+    stroke-linejoin="round"
+    d="M40 8c2.6 9.8 9.8 17 19.6 19.6C49.8 30.2 42.6 37.4 40 47.2 37.4 37.4 30.2 30.2 20.4 27.6 30.2 25 37.4 17.8 40 8z"
+  />
+  <circle
+    cx="39.4"
+    cy="26.85"
+    r="2.6"
+    stroke="#f7ebda"
+    stroke-opacity="0.34"
+    stroke-width="1.25"
+  />
+
+  <!-- Fine crest along the ridge peak -->
+  <path
+    transform="translate(-0.12 -0.18)"
+    stroke="#efe0c8"
+    stroke-opacity="0.18"
+    stroke-width="0.65"
+    stroke-linejoin="round"
+    d="M40 8c2.6 9.8 9.8 17 19.6 19.6C49.8 30.2 42.6 37.4 40 47.2 37.4 37.4 30.2 30.2 20.4 27.6 30.2 25 37.4 17.8 40 8z"
+  />
+  <circle
+    cx="39.88"
+    cy="27.42"
+    r="2.6"
+    stroke="#efe0c8"
+    stroke-opacity="0.16"
+    stroke-width="0.55"
+  />
+</svg>

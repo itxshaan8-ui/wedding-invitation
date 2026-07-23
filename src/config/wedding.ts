@@ -38,13 +38,6 @@ export const weddingConfig: WeddingConfig = {
       description: "A shared feast with family and friends.",
       icon: "dinner",
     },
-    {
-      id: "4",
-      time: "9:30 PM",
-      title: "Dancing & Celebration",
-      description: "Music, cake, and dancing into the night.",
-      icon: "party",
-    },
   ],
   gallery: [
     {

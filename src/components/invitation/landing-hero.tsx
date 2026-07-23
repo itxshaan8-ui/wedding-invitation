@@ -3,9 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { FloralBackground } from "@/components/invitation/floral-background";
-import { weddingConfig } from "@/config/wedding";
-
 interface LandingHeroProps {
   onOpen: () => void;
 }
@@ -14,6 +11,15 @@ type EnvelopePhase = "idle" | "opening" | "revealed" | "exit";
 
 const FLAP_CLOSED = "polygon(0% 0%, 100% 0%, 50% 100%)";
 const FLAP_OPEN = "polygon(0% 0%, 100% 0%, 50% 0%)";
+const FLAP_INNER_CLOSED = "polygon(3.8% 3.2%, 96.2% 3.2%, 50% 90%)";
+const FLAP_INNER_OPEN = "polygon(3.8% 3.2%, 96.2% 3.2%, 50% 3.2%)";
+const FLAP_BORDER_CLOSED = "polygon(0% 0%, 100% 0%, 50% 100%)";
+const FLAP_BORDER_OPEN = "polygon(0% 0%, 100% 0%, 50% 0%)";
+const FLAP_ROPE_CLOSED = "0,0 100,0 50,100";
+const FLAP_ROPE_OPEN = "0,0 100,0 50,0";
+
+const FLAP_EASE = [0.22, 0.05, 0.18, 1] as const;
+const FLAP_DURATION = 2.15;
 
 const LIGHT_RAYS = [
   { angle: -8, width: 3, length: 48, delay: 0 },
@@ -96,21 +102,15 @@ function RevealLight({ showRays, showCircle, exiting }: RevealLightProps) {
         initial={false}
         animate={
           showCircle || exiting
-            ? {
-                opacity: exiting ? 1 : 0.9,
-                scale: exiting ? 2.8 : 1.2,
-              }
+            ? { opacity: exiting ? 1 : 0.9, scale: exiting ? 2.8 : 1.2 }
             : { opacity: 0, scale: 0.2 }
         }
-        transition={{
-          duration: exiting ? 0.85 : 1.7,
-          ease: [0.22, 1, 0.36, 1],
-        }}
+        transition={{ duration: exiting ? 0.85 : 1.7, ease: [0.22, 1, 0.36, 1] }}
         style={{
           background:
             "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,250,240,0.95) 18%, rgba(232,213,176,0.55) 40%, transparent 70%)",
           boxShadow:
-            "0 0 40px 20px rgba(255,255,255,0.9), 0 0 90px 45px rgba(232,213,176,0.45), 0 0 160px 80px rgba(196,165,116,0.2)",
+            "0 0 40px 20px rgba(255,255,255,0.9), 0 0 90px 45px rgba(232,213,176,0.45)",
         }}
       />
 
@@ -119,10 +119,7 @@ function RevealLight({ showRays, showCircle, exiting }: RevealLightProps) {
         initial={false}
         animate={
           showCircle || exiting
-            ? {
-                opacity: exiting ? 1 : 0.65,
-                scale: exiting ? 4 : 1,
-              }
+            ? { opacity: exiting ? 1 : 0.65, scale: exiting ? 4 : 1 }
             : { opacity: 0, scale: 0.15 }
         }
         transition={{
@@ -139,16 +136,110 @@ function RevealLight({ showRays, showCircle, exiting }: RevealLightProps) {
       <motion.div
         className="absolute inset-0"
         initial={false}
-        animate={{
-          opacity: exiting ? 1 : showCircle ? 0.18 : 0,
-        }}
+        animate={{ opacity: exiting ? 1 : showCircle ? 0.18 : 0 }}
         transition={{ duration: exiting ? 0.8 : 1.5 }}
         style={{
           background:
-            "radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(255,252,248,0.7) 30%, rgba(247,243,238,0.4) 55%, transparent 75%)",
+            "radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(255,252,248,0.7) 30%, transparent 75%)",
         }}
       />
     </div>
+  );
+}
+
+function EnvelopeStamp({
+  open,
+  locked,
+}: {
+  open: boolean;
+  locked: boolean;
+}) {
+  return (
+    <motion.div
+      className="absolute top-1/2 left-1/2 z-20 flex size-[7.25rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:size-[8.75rem]"
+      initial={false}
+      animate={
+        open
+          ? { opacity: 0, scale: 0.7, y: -36, rotate: -8 }
+          : { opacity: 1, scale: [1, 1.03, 1], y: 0, rotate: -2 }
+      }
+      transition={
+        open
+          ? { duration: 0.7, delay: 0.15, ease: "easeOut" }
+          : {
+              scale: { duration: 2.8, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 0 },
+            }
+      }
+    >
+      <div
+        className={`stamp-wax relative flex size-full items-center justify-center rounded-full transition-transform duration-300 ${
+          locked ? "" : "group-hover:scale-[1.05] group-hover:-rotate-1"
+        }`}
+        style={{
+          filter: "contrast(1.04) saturate(0.95)",
+        }}
+      >
+        <div
+          aria-hidden="true"
+          className="stamp-rope absolute inset-[3px] rounded-full"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-[9px] rounded-full border border-[#f0d9a8]/35 opacity-80"
+          style={{
+            boxShadow:
+              "inset 0 0 0 1px rgba(70, 40, 10, 0.35), 0 0 0 1px rgba(255, 220, 160, 0.15)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-[14px] rounded-full"
+          style={{
+            border: "1.5px dashed rgba(255, 230, 190, 0.45)",
+            opacity: 0.85,
+            transform: "rotate(-4deg)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-[18px] rounded-full border border-[#5a3410]/40"
+          style={{
+            boxShadow: "inset 0 1px 2px rgba(255, 230, 180, 0.2)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-full opacity-40"
+          style={{
+            background:
+              "radial-gradient(circle at 30% 25%, rgba(255,240,210,0.45), transparent 45%)",
+            mixBlendMode: "soft-light",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-full opacity-25"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            mixBlendMode: "multiply",
+          }}
+        />
+        <span
+          className="relative z-10 px-3 text-center font-heading text-[0.8rem] leading-tight font-semibold tracking-[0.14em] text-[#f8edd8] uppercase sm:text-[0.95rem]"
+          style={{
+            textShadow:
+              "0 1px 0 rgba(255, 230, 180, 0.25), 0 2px 3px rgba(40, 20, 5, 0.55)",
+            transform: "rotate(-1deg)",
+          }}
+        >
+          Click
+          <br />
+          here
+        </span>
+      </div>
+    </motion.div>
   );
 }
 
@@ -175,9 +266,9 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
     setPhase("opening");
 
     timersRef.current.push(
-      window.setTimeout(() => setPhase("revealed"), 1100),
-      window.setTimeout(() => setPhase("exit"), 2200),
-      window.setTimeout(() => onOpen(), 3000)
+      window.setTimeout(() => setPhase("revealed"), 2100),
+      window.setTimeout(() => setPhase("exit"), 3300),
+      window.setTimeout(() => onOpen(), 4100)
     );
   }, [locked, onOpen, reduceMotion]);
 
@@ -188,150 +279,229 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
 
   return (
     <motion.section
-      className="relative flex min-h-dvh items-center justify-center overflow-hidden px-5"
+      className="relative h-dvh w-full overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: phase === "exit" ? 0 : 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       aria-label="Wedding invitation envelope"
     >
-      <FloralBackground />
+      <button
+        type="button"
+        onClick={handleOpen}
+        disabled={locked}
+        aria-label="Click the envelope to open the invitation"
+        className="group absolute inset-0 h-full w-full cursor-pointer border-0 p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset disabled:cursor-default"
+      >
+        <span className="sr-only">Click here to open invitation</span>
 
-      <div className="relative z-10 flex w-full max-w-lg flex-col items-center">
-        <motion.p
-          className="mb-8 text-center text-xs font-medium tracking-[0.32em] text-gold-deep uppercase sm:text-sm"
-          animate={{ opacity: locked ? 0 : 1, y: locked ? -10 : 0 }}
-          transition={{ duration: 0.35 }}
-        >
-          {weddingConfig.groom} & {weddingConfig.bride}
-        </motion.p>
+        <div className="envelope-royal absolute inset-0">
+          <div className="envelope-damask absolute inset-0" />
+          <div className="envelope-noise absolute inset-0" />
+          <div
+            aria-hidden="true"
+            className="absolute inset-[10px] rounded-[2px] border border-[#8b6f3a]/25 sm:inset-[14px]"
+            style={{
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 240, 210, 0.18), inset 0 0 40px rgba(90, 55, 15, 0.08)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-[18px] rounded-[1px] border border-dashed border-[#c4a574]/20 sm:inset-[24px]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-1/3"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,248,235,0.28), transparent)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 h-1/4"
+            style={{
+              background:
+                "linear-gradient(0deg, rgba(80,50,15,0.18), transparent)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-[12%] left-[8%] w-px bg-gradient-to-b from-transparent via-[#8b6f3a]/25 to-transparent"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-[12%] right-[8%] w-px bg-gradient-to-b from-transparent via-[#8b6f3a]/25 to-transparent"
+          />
+        </div>
 
-        <motion.div
-          animate={locked ? { y: 0 } : { y: [0, -5, 0] }}
-          transition={
-            locked
-              ? { duration: 0.3 }
-              : { duration: 4.8, repeat: Infinity, ease: "easeInOut" }
-          }
-          className="w-full max-w-[22rem] sm:max-w-[26rem]"
-        >
-          <button
-            type="button"
-            onClick={handleOpen}
-            disabled={locked}
-            aria-label="Click the envelope to open the invitation"
-            className="group relative block w-full cursor-pointer border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-pearl disabled:cursor-default"
+        <div className="absolute inset-x-0 top-0 z-[3] h-[46%] sm:h-[44%]">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              clipPath: FLAP_CLOSED,
+              background:
+                "linear-gradient(180deg, #fffdf8 0%, #f7efe3 45%, #efe2cf 100%)",
+              boxShadow: "inset 0 10px 24px rgba(42, 35, 31, 0.08)",
+            }}
           >
-            <span className="sr-only">Click here to open invitation</span>
+            <div className="envelope-noise absolute inset-0 opacity-20" />
+            <div className="envelope-damask absolute inset-0 opacity-40" />
+          </div>
 
+          <motion.div
+            aria-hidden="true"
+            className="absolute inset-0 origin-top"
+            initial={false}
+            animate={{ clipPath: flapOpen ? FLAP_BORDER_OPEN : FLAP_BORDER_CLOSED }}
+            transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+            style={{
+              background:
+                "linear-gradient(180deg, #4a3212 0%, #6e4f22 35%, #8b6f3a 70%, #5a3d16 100%)",
+              transform: "translateY(2px)",
+              filter:
+                "drop-shadow(0 6px 10px rgba(42, 25, 8, 0.28)) drop-shadow(0 2px 4px rgba(42, 25, 8, 0.2))",
+            }}
+          />
+
+          <motion.div
+            className="envelope-royal-flap envelope-flap-edge absolute inset-0 origin-top"
+            initial={false}
+            animate={{ clipPath: flapOpen ? FLAP_OPEN : FLAP_CLOSED }}
+            transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+          >
+            <div className="envelope-noise absolute inset-0" />
+            <div className="envelope-damask absolute inset-0 opacity-80" />
             <div
-              className="relative mx-auto w-full"
-              style={{ aspectRatio: "5 / 3.4" }}
-            >
-              <div className="absolute inset-0 overflow-hidden rounded-[0.35rem_0.35rem_1.1rem_1.1rem] border border-[#c4a574]/55 bg-[linear-gradient(160deg,#fffaf3_0%,#f0e2cf_48%,#e2c9a2_100%)] shadow-[0_22px_50px_rgba(42,35,31,0.14)]">
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.5)_0%,transparent_40%,rgba(196,165,116,0.12)_100%)]" />
-                <p className="absolute inset-x-0 bottom-[14%] z-[1] text-center font-heading text-2xl tracking-wide text-ink/75 sm:text-3xl">
-                  {weddingConfig.monogram}
-                </p>
-              </div>
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,245,220,0.12) 35%, transparent 62%)",
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(90,55,15,0.16) 0%, transparent 18%, transparent 82%, rgba(90,55,15,0.16) 100%)",
+              }}
+            />
+          </motion.div>
 
-              <div className="absolute inset-x-0 top-0 z-[3] h-[46%]">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0"
-                  style={{
-                    clipPath: FLAP_CLOSED,
-                    background:
-                      "linear-gradient(180deg, #ffffff 0%, #fffdf9 42%, #f7f1e8 100%)",
-                    boxShadow: "inset 0 8px 18px rgba(42, 35, 31, 0.06)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 70%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 55%, transparent 75%)",
-                    }}
-                  />
-                </div>
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 origin-top"
+            initial={false}
+            animate={{
+              clipPath: flapOpen ? FLAP_INNER_OPEN : FLAP_INNER_CLOSED,
+            }}
+            transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+            style={{
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 236, 200, 0.35), inset 0 0 18px rgba(90, 55, 15, 0.08)",
+            }}
+          />
 
-                <motion.div
-                  className="absolute inset-0 origin-top"
-                  initial={false}
-                  animate={{
-                    clipPath: flapOpen ? FLAP_OPEN : FLAP_CLOSED,
-                  }}
-                  transition={{
-                    duration: 0.95,
-                    ease: [0.45, 0, 0.2, 1],
-                  }}
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #f3e6d2 0%, #e4cbab 45%, #c9a66c 100%)",
-                    boxShadow: "0 10px 22px rgba(139, 111, 58, 0.16)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.35) 0%, transparent 60%)",
-                    }}
-                  />
-                </motion.div>
+          <motion.svg
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-[6] h-full w-full overflow-visible"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            initial={false}
+          >
+            <motion.polygon
+              fill="none"
+              stroke="#4a3212"
+              strokeWidth="3.4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              initial={false}
+              animate={{ points: flapOpen ? FLAP_ROPE_OPEN : FLAP_ROPE_CLOSED }}
+              transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+              style={{ opacity: 0.95 }}
+            />
+            <motion.polygon
+              fill="none"
+              stroke="#c4a574"
+              strokeWidth="2.4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeDasharray="2.4 1.6"
+              vectorEffect="non-scaling-stroke"
+              initial={false}
+              animate={{ points: flapOpen ? FLAP_ROPE_OPEN : FLAP_ROPE_CLOSED }}
+              transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+              style={{ opacity: 0.95 }}
+            />
+            <motion.polygon
+              fill="none"
+              stroke="#f3e6d2"
+              strokeWidth="2.4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeDasharray="2.4 1.6"
+              strokeDashoffset="2"
+              vectorEffect="non-scaling-stroke"
+              initial={false}
+              animate={{ points: flapOpen ? FLAP_ROPE_OPEN : FLAP_ROPE_CLOSED }}
+              transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+              style={{ opacity: 0.88 }}
+            />
+            <motion.polygon
+              fill="none"
+              stroke="#8b5e2b"
+              strokeWidth="1.15"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeDasharray="1.1 2.9"
+              strokeDashoffset="1.2"
+              vectorEffect="non-scaling-stroke"
+              initial={false}
+              animate={{ points: flapOpen ? FLAP_ROPE_OPEN : FLAP_ROPE_CLOSED }}
+              transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+              style={{ opacity: 0.9 }}
+            />
+            <motion.polygon
+              fill="none"
+              stroke="#fff6e4"
+              strokeWidth="0.55"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              initial={false}
+              animate={{ points: flapOpen ? FLAP_ROPE_OPEN : FLAP_ROPE_CLOSED }}
+              transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
+              style={{ opacity: 0.45 }}
+            />
+          </motion.svg>
 
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 z-[4] h-px bg-[#c4a574]/70"
-                />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 z-[7] h-[4px] bg-gradient-to-r from-[#4a3212]/35 via-[#e8d5b0]/80 to-[#4a3212]/35"
+            style={{
+              boxShadow: "0 3px 8px rgba(42, 25, 8, 0.22)",
+            }}
+          />
+        </div>
 
-                <motion.div
-                  className="absolute left-1/2 z-[5] flex size-[4.75rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:size-[5.5rem]"
-                  initial={false}
-                  animate={
-                    flapOpen
-                      ? { top: "0%", opacity: 0, scale: 0.65 }
-                      : { top: "100%", opacity: 1, scale: [1, 1.045, 1] }
-                  }
-                  transition={
-                    flapOpen
-                      ? {
-                          top: { duration: 0.95, ease: [0.45, 0, 0.2, 1] },
-                          opacity: { duration: 0.35, delay: 0.15 },
-                          scale: { duration: 0.35, delay: 0.15 },
-                        }
-                      : {
-                          top: { duration: 0 },
-                          scale: {
-                            duration: 2.3,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          },
-                        }
-                  }
-                >
-                  <div className="relative flex size-full items-center justify-center rounded-full border-[3px] border-dashed border-[#e8d5b0]/90 bg-[linear-gradient(145deg,#8b6f3a_0%,#c4a574_48%,#e8d5b0_100%)] shadow-[0_10px_24px_rgba(139,111,58,0.32),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-300 group-hover:scale-[1.04]">
-                    <div className="absolute inset-[7px] rounded-full border border-[#f3e6d2]/55" />
-                    <span className="relative px-2 text-center font-sans text-[0.65rem] font-semibold tracking-[0.12em] text-[#fffaf3] uppercase sm:text-xs">
-                      Click
-                      <br />
-                      here
-                    </span>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </button>
-        </motion.div>
+        <EnvelopeStamp open={flapOpen} locked={locked} />
 
         <motion.p
-          className="mt-10 text-center text-sm tracking-[0.18em] text-muted-foreground uppercase"
+          className="absolute inset-x-0 bottom-8 z-20 text-center font-sans text-xs tracking-[0.28em] text-[#5a4124]/90 uppercase sm:bottom-10 sm:text-sm"
           animate={{ opacity: locked ? 0 : 1 }}
           transition={{ duration: 0.3 }}
+          style={{
+            textShadow: "0 1px 0 rgba(255, 245, 220, 0.35)",
+          }}
         >
-          Your invitation awaits
+          Your Invitation Awaits
         </motion.p>
-      </div>
+      </button>
 
       <RevealLight
         showRays={showRays}

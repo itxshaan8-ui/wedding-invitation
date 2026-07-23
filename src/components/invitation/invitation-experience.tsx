@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 
 import { ContactSection } from "@/components/invitation/contact-section";
 import { GallerySection } from "@/components/invitation/gallery-section";
@@ -13,8 +13,51 @@ import { TimelineSection } from "@/components/invitation/timeline-section";
 import { VenueSection } from "@/components/invitation/venue-section";
 import { weddingConfig } from "@/config/wedding";
 
+const BG_SETTLE_DURATION = 2.4;
+const CONTENT_REVEAL_DELAY = 1.55;
+
+function InvitationBackdrop() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div className="invitation-backdrop" aria-hidden="true">
+      <motion.div
+        className="invitation-backdrop-image"
+        initial={
+          reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 1.28 }
+        }
+        animate={{ opacity: 1, scale: 1 }}
+        transition={
+          reduceMotion
+            ? { duration: 0.01 }
+            : {
+                duration: BG_SETTLE_DURATION,
+                ease: [0.16, 1, 0.3, 1],
+              }
+        }
+      />
+      <motion.div
+        className="invitation-backdrop-veil"
+        initial={{ opacity: reduceMotion ? 1 : 0.35 }}
+        animate={{ opacity: 1 }}
+        transition={
+          reduceMotion
+            ? { duration: 0.01 }
+            : { duration: 1.6, ease: [0.22, 1, 0.36, 1] }
+        }
+      />
+    </div>
+  );
+}
+
 export function InvitationExperience() {
   const [isOpen, setIsOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = "/images/invitation-bg.png";
+  }, []);
 
   const handleOpen = useCallback(() => {
     setIsOpen(true);
@@ -22,6 +65,8 @@ export function InvitationExperience() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 100);
   }, []);
+
+  const contentDelay = reduceMotion ? 0 : CONTENT_REVEAL_DELAY;
 
   return (
     <>
@@ -40,11 +85,12 @@ export function InvitationExperience() {
             key="invitation"
             id="main-content"
             className="invitation-details min-h-dvh"
-            initial={{ opacity: 0, scale: 0.985 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            <InvitationCard />
+            <InvitationBackdrop />
+            <InvitationCard revealDelay={contentDelay} />
             <TimelineSection events={weddingConfig.timeline} />
             <GallerySection images={weddingConfig.gallery} />
             <VenueSection venue={weddingConfig.venue} />
