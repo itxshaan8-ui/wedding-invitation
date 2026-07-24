@@ -14,7 +14,7 @@ interface InvitationCardProps {
 export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
   const reduceMotion = useReducedMotion();
   const cardDelay = reduceMotion ? 0 : revealDelay;
-  const timerDelay = reduceMotion ? 0 : revealDelay + 0.45;
+  const timerDelay = reduceMotion ? 0 : revealDelay + 0.2;
 
   return (
     <section
@@ -23,10 +23,10 @@ export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
     >
       <motion.div
         className="relative z-10 mx-auto max-w-3xl"
-        initial={reduceMotion ? false : { opacity: 0, y: 56 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.95,
+          duration: 0.55,
           delay: cardDelay,
           ease: [0.22, 1, 0.36, 1],
         }}
@@ -78,10 +78,10 @@ export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
 
       <motion.div
         className="relative z-10 mt-12"
-        initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.85,
+          duration: 0.5,
           delay: timerDelay,
           ease: [0.22, 1, 0.36, 1],
         }}

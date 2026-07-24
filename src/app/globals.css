@@ -250,7 +250,8 @@
     color: rgba(255, 255, 255, 0.65);
   }
 
-  .envelope-royal {
+  .envelope-royal,
+  .envelope-royal-flap {
     background-color: #d9c4a0;
     background-image:
       radial-gradient(ellipse 120% 80% at 10% 0%, rgba(255, 248, 235, 0.55), transparent 55%),
@@ -270,33 +271,11 @@
         transparent 1px,
         transparent 4px
       );
-  }
-
-  .envelope-royal-flap {
-    background-color: #c9a66c;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 248, 230, 0.45), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(120, 80, 30, 0.2), transparent 50%),
-      linear-gradient(180deg, #f0e2c8 0%, #dfc49a 28%, #c9a66c 58%, #b08a4a 82%, #9a7538 100%),
-      repeating-linear-gradient(
-        118deg,
-        rgba(255, 255, 255, 0.1) 0px,
-        rgba(255, 255, 255, 0.1) 1px,
-        transparent 1px,
-        transparent 8px
-      ),
-      repeating-linear-gradient(
-        28deg,
-        rgba(70, 40, 10, 0.07) 0px,
-        rgba(70, 40, 10, 0.07) 1px,
-        transparent 1px,
-        transparent 7px
-      );
+    background-attachment: fixed;
   }
 
   .envelope-flap-edge {
     filter:
-      drop-shadow(0 1px 0 rgba(255, 236, 200, 0.45))
       drop-shadow(0 8px 14px rgba(42, 25, 8, 0.28))
       drop-shadow(0 3px 6px rgba(42, 25, 8, 0.2));
   }
@@ -304,6 +283,7 @@
   .envelope-noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
     background-size: 180px 180px;
+    background-attachment: fixed;
     mix-blend-mode: multiply;
     opacity: 0.28;
   }
@@ -312,6 +292,7 @@
     background-image: url("/images/envelope-damask.svg");
     background-size: 74px 74px;
     background-repeat: repeat;
+    background-attachment: fixed;
     mix-blend-mode: soft-light;
     opacity: 0.9;
   }

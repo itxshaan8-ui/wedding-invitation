@@ -8,8 +8,8 @@ import {
   Wine,
   type LucideIcon,
 } from "lucide-react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 
-import { AnimateIn } from "@/components/invitation/animate-in";
 import { GlassCard, SectionHeading } from "@/components/invitation/section-heading";
 import type { TimelineEvent } from "@/types/wedding";
 
@@ -23,11 +23,53 @@ const iconMap: Record<TimelineEvent["icon"], LucideIcon> = {
 
 interface TimelineSectionProps {
   events: TimelineEvent[];
+  revealDelay?: number;
 }
 
-export function TimelineSection({ events }: TimelineSectionProps) {
+export function TimelineSection({
+  events,
+  revealDelay = 0,
+}: TimelineSectionProps) {
+  const reduceMotion = useReducedMotion();
+  const sectionDelay = reduceMotion ? 0 : revealDelay;
+
+  const sectionVariants: Variants = {
+    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: sectionDelay,
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        when: "beforeChildren",
+        delayChildren: 0.08,
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
   return (
-    <section id="timeline" className="section-padding" aria-labelledby="timeline-heading">
+    <motion.section
+      id="timeline"
+      className="section-padding"
+      aria-labelledby="timeline-heading"
+      variants={sectionVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <SectionHeading
         eyebrow="The Day"
         title="Wedding Timeline"
@@ -45,41 +87,43 @@ export function TimelineSection({ events }: TimelineSectionProps) {
           const isLeft = index % 2 === 0;
 
           return (
-            <AnimateIn key={event.id} delay={index * 0.08}>
-              <li className="relative grid gap-4 sm:grid-cols-2 sm:gap-10">
-                <div
-                  className={`flex items-start gap-4 sm:contents ${
-                    isLeft ? "" : "sm:col-start-2"
+            <motion.li
+              key={event.id}
+              className="relative grid gap-4 sm:grid-cols-2 sm:gap-10"
+              variants={itemVariants}
+            >
+              <div
+                className={`flex items-start gap-4 sm:contents ${
+                  isLeft ? "" : "sm:col-start-2"
+                }`}
+              >
+                <span className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-white/80 text-gold-deep shadow-md sm:absolute sm:left-1/2 sm:-translate-x-1/2">
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+
+                <GlassCard
+                  className={`flex-1 ${
+                    isLeft ? "sm:col-start-1 sm:text-right" : "sm:col-start-2"
                   }`}
                 >
-                  <span className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-white/80 text-gold-deep shadow-md sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </span>
-
-                  <GlassCard
-                    className={`flex-1 ${
-                      isLeft ? "sm:col-start-1 sm:text-right" : "sm:col-start-2"
-                    }`}
+                  <p className="text-xs font-medium tracking-[0.22em] text-gold-deep uppercase">
+                    {event.time}
+                  </p>
+                  <h3
+                    id={index === 0 ? "timeline-heading" : undefined}
+                    className="mt-2 font-heading text-2xl text-ink"
                   >
-                    <p className="text-xs font-medium tracking-[0.22em] text-gold-deep uppercase">
-                      {event.time}
-                    </p>
-                    <h3
-                      id={index === 0 ? "timeline-heading" : undefined}
-                      className="mt-2 font-heading text-2xl text-ink"
-                    >
-                      {event.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                      {event.description}
-                    </p>
-                  </GlassCard>
-                </div>
-              </li>
-            </AnimateIn>
+                    {event.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {event.description}
+                  </p>
+                </GlassCard>
+              </div>
+            </motion.li>
           );
         })}
       </ol>
-    </section>
+    </motion.section>
   );
 }

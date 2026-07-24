@@ -15,8 +15,8 @@ const FLAP_INNER_CLOSED = "polygon(3.8% 3.2%, 96.2% 3.2%, 50% 90%)";
 const FLAP_INNER_OPEN = "polygon(3.8% 3.2%, 96.2% 3.2%, 50% 3.2%)";
 const FLAP_BORDER_CLOSED = "polygon(0% 0%, 100% 0%, 50% 100%)";
 const FLAP_BORDER_OPEN = "polygon(0% 0%, 100% 0%, 50% 0%)";
-const FLAP_ROPE_CLOSED = "0,0 100,0 50,100";
-const FLAP_ROPE_OPEN = "0,0 100,0 50,0";
+const FLAP_ROPE_CLOSED = "0,0 50,100 100,0";
+const FLAP_ROPE_OPEN = "0,0 50,0 100,0";
 
 const FLAP_EASE = [0.22, 0.05, 0.18, 1] as const;
 const FLAP_DURATION = 2.15;
@@ -156,7 +156,7 @@ function EnvelopeStamp({
 }) {
   return (
     <motion.div
-      className="absolute top-1/2 left-1/2 z-20 flex size-[7.25rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:size-[8.75rem]"
+      className="absolute top-[61%] left-1/2 z-20 flex size-[7.25rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-[44%] sm:size-[8.75rem]"
       initial={false}
       animate={
         open
@@ -336,7 +336,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
           />
         </div>
 
-        <div className="absolute inset-x-0 top-0 z-[3] h-[46%] sm:h-[44%]">
+        <div className="absolute inset-x-0 top-[25%] z-[3] h-[36%] sm:top-0 sm:h-[44%]">
           <div
             aria-hidden="true"
             className="absolute inset-0"
@@ -373,23 +373,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
             transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
           >
             <div className="envelope-noise absolute inset-0" />
-            <div className="envelope-damask absolute inset-0 opacity-80" />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,245,220,0.12) 35%, transparent 62%)",
-              }}
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(90,55,15,0.16) 0%, transparent 18%, transparent 82%, rgba(90,55,15,0.16) 100%)",
-              }}
-            />
+            <div className="envelope-damask absolute inset-0" />
           </motion.div>
 
           <motion.div
@@ -401,8 +385,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
             }}
             transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
             style={{
-              boxShadow:
-                "inset 0 0 0 1px rgba(255, 236, 200, 0.35), inset 0 0 18px rgba(90, 55, 15, 0.08)",
+              boxShadow: "inset 0 0 18px rgba(90, 55, 15, 0.06)",
             }}
           />
 
@@ -413,7 +396,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
             preserveAspectRatio="none"
             initial={false}
           >
-            <motion.polygon
+            <motion.polyline
               fill="none"
               stroke="#4a3212"
               strokeWidth="3.4"
@@ -425,7 +408,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
               transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
               style={{ opacity: 0.95 }}
             />
-            <motion.polygon
+            <motion.polyline
               fill="none"
               stroke="#c4a574"
               strokeWidth="2.4"
@@ -438,7 +421,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
               transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
               style={{ opacity: 0.95 }}
             />
-            <motion.polygon
+            <motion.polyline
               fill="none"
               stroke="#f3e6d2"
               strokeWidth="2.4"
@@ -452,7 +435,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
               transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
               style={{ opacity: 0.88 }}
             />
-            <motion.polygon
+            <motion.polyline
               fill="none"
               stroke="#8b5e2b"
               strokeWidth="1.15"
@@ -466,7 +449,7 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
               transition={{ duration: FLAP_DURATION, ease: FLAP_EASE }}
               style={{ opacity: 0.9 }}
             />
-            <motion.polygon
+            <motion.polyline
               fill="none"
               stroke="#fff6e4"
               strokeWidth="0.55"
@@ -479,14 +462,6 @@ export function LandingHero({ onOpen }: LandingHeroProps) {
               style={{ opacity: 0.45 }}
             />
           </motion.svg>
-
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 z-[7] h-[4px] bg-gradient-to-r from-[#4a3212]/35 via-[#e8d5b0]/80 to-[#4a3212]/35"
-            style={{
-              boxShadow: "0 3px 8px rgba(42, 25, 8, 0.22)",
-            }}
-          />
         </div>
 
         <EnvelopeStamp open={flapOpen} locked={locked} />

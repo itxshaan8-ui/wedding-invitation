@@ -14,7 +14,8 @@ import { VenueSection } from "@/components/invitation/venue-section";
 import { weddingConfig } from "@/config/wedding";
 
 const BG_SETTLE_DURATION = 2.4;
-const CONTENT_REVEAL_DELAY = 1.55;
+const CONTENT_REVEAL_DELAY = BG_SETTLE_DURATION + 0.15;
+const TIMELINE_REVEAL_OFFSET = 0.35;
 
 function InvitationBackdrop() {
   const reduceMotion = useReducedMotion();
@@ -67,6 +68,9 @@ export function InvitationExperience() {
   }, []);
 
   const contentDelay = reduceMotion ? 0 : CONTENT_REVEAL_DELAY;
+  const timelineDelay = reduceMotion
+    ? 0
+    : CONTENT_REVEAL_DELAY + TIMELINE_REVEAL_OFFSET;
 
   return (
     <>
@@ -91,7 +95,10 @@ export function InvitationExperience() {
           >
             <InvitationBackdrop />
             <InvitationCard revealDelay={contentDelay} />
-            <TimelineSection events={weddingConfig.timeline} />
+            <TimelineSection
+              events={weddingConfig.timeline}
+              revealDelay={timelineDelay}
+            />
             <GallerySection images={weddingConfig.gallery} />
             <VenueSection venue={weddingConfig.venue} />
             <ContactSection contacts={weddingConfig.contacts} />
