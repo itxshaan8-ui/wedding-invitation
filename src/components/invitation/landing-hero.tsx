@@ -14,13 +14,165 @@ interface LandingHeroProps {
   onOpenComplete: () => void;
 }
 
-type EnvelopePhase = "idle" | "opening";
+type EnvelopePhase = "idle" | "opening" | "bloom" | "exit";
 
 const HOLD_DURATION_MS = 1000;
 const SHUTTER_DURATION = 1.9;
 const SHUTTER_EASE = [0.66, 0.02, 0.28, 1] as const;
 const HOLD_FEEDBACK_VIBRATE = [25, 90, 25, 90, 30, 90, 35, 90, 40] as number[];
 const OPEN_VIBRATE = [90, 45, 140, 50, 220, 60, 255] as number[];
+
+export const SPLASH_TRANSITION_DURATION = SHUTTER_DURATION;
+
+const LIGHT_RAYS = [
+  { angle: -8, width: 3, length: 48, delay: 0 },
+  { angle: 14, width: 5, length: 68, delay: 0.07 },
+  { angle: -28, width: 2, length: 42, delay: 0.12 },
+  { angle: 36, width: 4, length: 74, delay: 0.18 },
+  { angle: -48, width: 6, length: 58, delay: 0.24 },
+  { angle: 58, width: 2.5, length: 82, delay: 0.3 },
+  { angle: -72, width: 3.5, length: 64, delay: 0.36 },
+  { angle: 78, width: 7, length: 90, delay: 0.42 },
+  { angle: -98, width: 2, length: 52, delay: 0.48 },
+  { angle: 112, width: 4.5, length: 76, delay: 0.54 },
+  { angle: -128, width: 3, length: 60, delay: 0.6 },
+  { angle: 148, width: 5.5, length: 86, delay: 0.66 },
+  { angle: -158, width: 2.5, length: 46, delay: 0.72 },
+  { angle: 172, width: 4, length: 70, delay: 0.78 },
+  { angle: -178, width: 8, length: 95, delay: 0.84 },
+  { angle: 22, width: 1.5, length: 38, delay: 0.2 },
+  { angle: -62, width: 1.8, length: 34, delay: 0.4 },
+  { angle: 96, width: 2.2, length: 44, delay: 0.56 },
+] as const;
+
+function RevealLight({
+  showRays,
+  showCircle,
+  exiting,
+}: {
+  showRays: boolean;
+  showCircle: boolean;
+  exiting: boolean;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-[45] flex items-center justify-center overflow-hidden"
+    >
+      <div className="absolute inset-0 flex items-center justify-center">
+        {LIGHT_RAYS.map((ray, index) => (
+          <div
+            key={`${ray.angle}-${index}`}
+            className="absolute top-1/2 left-1/2"
+            style={{ transform: `rotate(${ray.angle}deg)` }}
+          >
+            <motion.div
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 origin-bottom"
+              style={{
+                width: `${ray.width}px`,
+                height: `${ray.length}vmin`,
+                background:
+                  ray.width >= 5
+                    ? "linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,248,230,0.75) 35%, rgba(232,213,176,0.25) 70%, transparent 100%)"
+                    : "linear-gradient(to top, rgba(255,255,255,0.9) 0%, rgba(255,250,240,0.55) 40%, transparent 100%)",
+                borderRadius: "999px",
+                filter: ray.width >= 5 ? "blur(0.6px)" : "blur(0.3px)",
+                boxShadow:
+                  ray.width >= 4
+                    ? "0 0 12px 2px rgba(255,255,255,0.55)"
+                    : "0 0 6px 1px rgba(255,255,255,0.35)",
+              }}
+              initial={false}
+              animate={
+                showRays
+                  ? {
+                      opacity: exiting ? [0.85, 1, 0] : 1,
+                      scaleY: exiting ? [1, 1.45, 1.9] : 1,
+                      scaleX: exiting ? [1, 1.12, 0.65] : 1,
+                    }
+                  : { opacity: 0, scaleY: 0.08, scaleX: 0.35 }
+              }
+              transition={{
+                duration: exiting ? 1.05 : 0.85,
+                delay:
+                  showRays && !exiting
+                    ? ray.delay
+                    : exiting
+                      ? ray.delay * 0.08
+                      : 0,
+                ease: [0.16, 1, 0.3, 1],
+                times: exiting ? [0, 0.4, 1] : undefined,
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <motion.div
+        className="absolute size-[min(70vw,22rem)] rounded-full"
+        initial={false}
+        animate={
+          showCircle || exiting
+            ? {
+                opacity: exiting ? [0.85, 1, 0] : 0.9,
+                scale: exiting ? [1.2, 2.6, 3.2] : 1.2,
+              }
+            : { opacity: 0, scale: 0.2 }
+        }
+        transition={{
+          duration: exiting ? 1.05 : 1.7,
+          ease: [0.22, 1, 0.36, 1],
+          times: exiting ? [0, 0.4, 1] : undefined,
+        }}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,250,240,0.95) 18%, rgba(232,213,176,0.55) 40%, transparent 70%)",
+          boxShadow:
+            "0 0 40px 20px rgba(255,255,255,0.9), 0 0 90px 45px rgba(232,213,176,0.45)",
+        }}
+      />
+
+      <motion.div
+        className="absolute size-[min(40vw,12rem)] rounded-full bg-white"
+        initial={false}
+        animate={
+          showCircle || exiting
+            ? {
+                opacity: exiting ? [0.55, 0.95, 0] : 0.65,
+                scale: exiting ? [1, 3.4, 4.2] : 1,
+              }
+            : { opacity: 0, scale: 0.15 }
+        }
+        transition={{
+          duration: exiting ? 1.05 : 1.9,
+          delay: showCircle && !exiting ? 0.2 : 0,
+          ease: [0.22, 1, 0.36, 1],
+          times: exiting ? [0, 0.4, 1] : undefined,
+        }}
+        style={{
+          filter: "blur(2px)",
+          boxShadow: "0 0 50px 30px rgba(255,255,255,0.95)",
+        }}
+      />
+
+      <motion.div
+        className="absolute inset-0"
+        initial={false}
+        animate={{
+          opacity: exiting ? [0.2, 0.92, 0] : showCircle ? 0.18 : 0,
+        }}
+        transition={{
+          duration: exiting ? 1.05 : 1.5,
+          times: exiting ? [0, 0.38, 1] : undefined,
+        }}
+        style={{
+          background:
+            "radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(255,252,248,0.7) 30%, transparent 75%)",
+        }}
+      />
+    </div>
+  );
+}
 
 function vibrate(pattern: number | number[]) {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
@@ -335,7 +487,10 @@ export function LandingHero({ onOpenStart, onOpenComplete }: LandingHeroProps) {
   const holdTimerRef = useRef<number | null>(null);
   const holdingRef = useRef(false);
   const locked = phase !== "idle";
-  const opening = phase === "opening";
+  const opening = phase !== "idle";
+  const showRays = phase !== "idle";
+  const showCircle = phase === "bloom" || phase === "exit";
+  const isExiting = phase === "exit";
 
   useEffect(() => {
     return () => {
@@ -359,8 +514,11 @@ export function LandingHero({ onOpenStart, onOpenComplete }: LandingHeroProps) {
     }
 
     setPhase("opening");
+    const shutterMs = SHUTTER_DURATION * 1000;
     timersRef.current.push(
-      window.setTimeout(() => onOpenComplete(), SHUTTER_DURATION * 1000 + 80)
+      window.setTimeout(() => setPhase("bloom"), shutterMs * 0.42),
+      window.setTimeout(() => setPhase("exit"), shutterMs * 0.72),
+      window.setTimeout(() => onOpenComplete(), shutterMs * 0.72 + 1100)
     );
   }, [onOpenComplete, onOpenStart, phase, reduceMotion]);
 
@@ -486,6 +644,12 @@ export function LandingHero({ onOpenStart, onOpenComplete }: LandingHeroProps) {
         opening={opening}
         onHoldStart={startHold}
         onHoldEnd={cancelHold}
+      />
+
+      <RevealLight
+        showRays={showRays}
+        showCircle={showCircle}
+        exiting={isExiting}
       />
     </section>
   );

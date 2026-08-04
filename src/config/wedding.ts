@@ -42,7 +42,7 @@ export const weddingConfig: WeddingConfig = {
   gallery: [
     {
       id: "1",
-      src: "/images/gallery-reception.jpg",
+      src: "https://i.ibb.co/YTJTBZLs/ss3.jpg",
       alt: "Muhammad Hassaan and Duaa Hashim — reception illustration",
       width: 415,
       height: 739,

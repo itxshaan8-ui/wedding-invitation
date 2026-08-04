@@ -1,16 +1,22 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
 import { ContactSection } from "@/components/invitation/contact-section";
 import { GallerySection } from "@/components/invitation/gallery-section";
 import { InvitationCard } from "@/components/invitation/invitation-card";
-import { LandingHero } from "@/components/invitation/landing-hero";
+import {
+  LandingHero,
+} from "@/components/invitation/landing-hero";
 import { MusicPlayer } from "@/components/invitation/music-player";
 import { SiteFooter } from "@/components/invitation/site-footer";
 import { TimelineSection } from "@/components/invitation/timeline-section";
 import { VenueSection } from "@/components/invitation/venue-section";
 import { weddingConfig } from "@/config/wedding";
+
+const DETAILS_RISE_DURATION = 1.15;
+const DETAILS_RISE_EASE = [0.22, 0.08, 0.18, 1] as const;
 
 function InvitationBackdrop() {
   return (
@@ -31,7 +37,9 @@ function waitForNextPaint() {
 
 export function InvitationExperience() {
   const [showLanding, setShowLanding] = useState(true);
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const img = new window.Image();
@@ -39,7 +47,7 @@ export function InvitationExperience() {
   }, []);
 
   useEffect(() => {
-    if (!showDetails || !showLanding) return;
+    if (!showLanding || (!showBackdrop && !showDetails)) return;
 
     const previousOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
@@ -47,15 +55,16 @@ export function InvitationExperience() {
     return () => {
       document.documentElement.style.overflow = previousOverflow;
     };
-  }, [showDetails, showLanding]);
+  }, [showBackdrop, showDetails, showLanding]);
 
   const handleOpenStart = useCallback(async () => {
-    setShowDetails(true);
+    setShowBackdrop(true);
     await waitForNextPaint();
   }, []);
 
   const handleOpenComplete = useCallback(() => {
     setShowLanding(false);
+    setShowDetails(true);
     window.scrollTo(0, 0);
   }, []);
 
@@ -68,22 +77,34 @@ export function InvitationExperience() {
         Skip to content
       </a>
 
+      {showBackdrop || showDetails ? <InvitationBackdrop /> : null}
+
       {showDetails ? (
-        <div
+        <motion.div
           id="main-content"
-          className="invitation-details relative z-10 min-h-dvh"
+          className="invitation-details relative z-10 min-h-dvh origin-bottom"
+          initial={
+            reduceMotion
+              ? { opacity: 1, y: 0, scale: 1 }
+              : { opacity: 0, y: "55vh", scale: 0.74 }
+          }
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={
+            reduceMotion
+              ? { duration: 0.01 }
+              : {
+                  duration: DETAILS_RISE_DURATION,
+                  ease: DETAILS_RISE_EASE,
+                }
+          }
         >
-          <InvitationBackdrop />
           <InvitationCard revealDelay={0} />
-          <TimelineSection
-            events={weddingConfig.timeline}
-            revealDelay={0}
-          />
+          <TimelineSection events={weddingConfig.timeline} revealDelay={0} />
           <GallerySection images={weddingConfig.gallery} />
           <VenueSection venue={weddingConfig.venue} />
           <ContactSection contacts={weddingConfig.contacts} />
           <SiteFooter />
-        </div>
+        </motion.div>
       ) : null}
 
       {showLanding ? (
