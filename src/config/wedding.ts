@@ -1,8 +1,8 @@
 import type { WeddingConfig } from "@/types/wedding";
 
 export const weddingConfig: WeddingConfig = {
-  bride: "Duaa",
-  groom: "Hassaan",
+  bride: "Duaa Hashim",
+  groom: "Muhammad Hassaan",
   monogram: "H & D",
   tagline: "Request the pleasure of your company",
   weddingDate: "2026-10-24T19:00:00+05:00",
@@ -42,22 +42,29 @@ export const weddingConfig: WeddingConfig = {
   gallery: [
     {
       id: "1",
+      src: "/images/gallery-reception.jpg",
+      alt: "Muhammad Hassaan and Duaa Hashim — reception illustration",
+      width: 415,
+      height: 739,
+    },
+    {
+      id: "2",
       src: "https://i.ibb.co/Pvg8PvFD/s3.jpg",
-      alt: "Hassaan and Duaa — photo 1",
+      alt: "Muhammad Hassaan and Duaa Hashim — photo 2",
       width: 401,
       height: 498,
     },
     {
-      id: "2",
+      id: "3",
       src: "https://i.ibb.co/BVsJg5Q7/s2.jpg",
-      alt: "Hassaan and Duaa — photo 2",
+      alt: "Muhammad Hassaan and Duaa Hashim — photo 3",
       width: 547,
       height: 365,
     },
     {
-      id: "3",
+      id: "4",
       src: "https://i.ibb.co/JR4VNNgh/s1.jpg",
-      alt: "Hassaan and Duaa — photo 3",
+      alt: "Muhammad Hassaan and Duaa Hashim — photo 4",
       width: 335,
       height: 597,
     },

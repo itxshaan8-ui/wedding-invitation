@@ -10,6 +10,7 @@
   --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-playfair);
+  --font-sketch: var(--font-caveat);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-gold-deep: var(--gold-deep);
@@ -151,7 +152,7 @@
   .invitation-details {
     position: relative;
     color: #ffffff;
-    background-color: #050505;
+    background-color: transparent;
   }
 
   .invitation-backdrop {
@@ -160,6 +161,7 @@
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
+    background-color: #050505;
   }
 
   .invitation-backdrop-image {
@@ -169,7 +171,6 @@
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    will-change: transform;
   }
 
   .invitation-backdrop-veil {

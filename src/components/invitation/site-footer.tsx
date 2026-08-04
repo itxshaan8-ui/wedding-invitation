@@ -7,9 +7,10 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-gold/15 px-5 py-12 text-center">
-      <p className="font-heading text-2xl text-ink sm:text-3xl">
-        {weddingConfig.groom}{" "}
-        <span className="text-gold-deep">&</span> {weddingConfig.bride}
+      <p className="flex flex-col items-center font-heading text-2xl leading-snug text-ink sm:text-3xl">
+        <span>{weddingConfig.groom}</span>
+        <span className="my-0.5 text-gold-deep">&</span>
+        <span>{weddingConfig.bride}</span>
       </p>
       <p className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground">
         With love

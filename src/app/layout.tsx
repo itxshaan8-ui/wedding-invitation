@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Poppins } from "next/font/google";
+import { Caveat, Playfair_Display, Poppins } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 
 import { weddingConfig } from "@/config/wedding";
@@ -16,6 +16,13 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-poppins",
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -47,9 +54,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: weddingConfig.gallery[0]?.src ?? "/og.jpg",
-        width: 1200,
-        height: 800,
-        alt: `${weddingConfig.groom} and ${weddingConfig.bride}`,
+        width: weddingConfig.gallery[0]?.width ?? 1200,
+        height: weddingConfig.gallery[0]?.height ?? 800,
+        alt: weddingConfig.gallery[0]?.alt ?? `${weddingConfig.groom} and ${weddingConfig.bride}`,
       },
     ],
   },
@@ -57,6 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
+    images: [weddingConfig.gallery[0]?.src ?? "/og.jpg"],
   },
   robots: {
     index: true,
@@ -77,7 +85,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${poppins.variable} antialiased`}>
+      <body
+        className={`${playfair.variable} ${poppins.variable} ${caveat.variable} antialiased`}
+      >
         {children}
         <Toaster position="top-center" richColors closeButton />
       </body>

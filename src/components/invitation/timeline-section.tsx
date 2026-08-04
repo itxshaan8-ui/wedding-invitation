@@ -31,31 +31,32 @@ export function TimelineSection({
   revealDelay = 0,
 }: TimelineSectionProps) {
   const reduceMotion = useReducedMotion();
-  const sectionDelay = reduceMotion ? 0 : revealDelay;
+  const instant = Boolean(reduceMotion) || revealDelay <= 0;
+  const sectionDelay = instant ? 0 : revealDelay;
 
   const sectionVariants: Variants = {
-    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40 },
+    hidden: instant ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         delay: sectionDelay,
-        duration: 0.8,
+        duration: instant ? 0 : 0.8,
         ease: [0.22, 1, 0.36, 1],
         when: "beforeChildren",
-        delayChildren: 0.08,
-        staggerChildren: 0.08,
+        delayChildren: instant ? 0 : 0.08,
+        staggerChildren: instant ? 0 : 0.08,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 },
+    hidden: instant ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.55,
+        duration: instant ? 0 : 0.55,
         ease: [0.22, 1, 0.36, 1],
       },
     },

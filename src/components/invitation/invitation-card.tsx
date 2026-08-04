@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { CountdownTimer } from "@/components/invitation/countdown-timer";
 import { GlassCard } from "@/components/invitation/section-heading";
+import { WeddingCalendar } from "@/components/invitation/wedding-calendar";
 import { weddingConfig } from "@/config/wedding";
 
 interface InvitationCardProps {
@@ -13,8 +14,10 @@ interface InvitationCardProps {
 
 export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
   const reduceMotion = useReducedMotion();
-  const cardDelay = reduceMotion ? 0 : revealDelay;
-  const timerDelay = reduceMotion ? 0 : revealDelay + 0.2;
+  const instant = Boolean(reduceMotion) || revealDelay <= 0;
+  const cardDelay = instant ? 0 : revealDelay;
+  const timerDelay = instant ? 0 : revealDelay + 0.2;
+  const calendarDelay = instant ? 0 : revealDelay + 0.35;
 
   return (
     <section
@@ -23,10 +26,10 @@ export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
     >
       <motion.div
         className="relative z-10 mx-auto max-w-3xl"
-        initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+        initial={instant ? false : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.55,
+          duration: instant ? 0 : 0.55,
           delay: cardDelay,
           ease: [0.22, 1, 0.36, 1],
         }}
@@ -40,13 +43,13 @@ export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
 
             <h1
               id="couple-heading"
-              className="mt-6 font-heading text-[clamp(2.4rem,8.5vw,4.25rem)] leading-[1.1] text-ink"
+              className="mt-6 flex flex-col items-center font-heading text-[clamp(2.1rem,7.5vw,4rem)] leading-[1.15] text-ink"
             >
-              {weddingConfig.groom}
-              <span className="mx-3 font-heading text-2xl font-normal text-gold-deep sm:mx-4 sm:text-3xl">
+              <span>{weddingConfig.groom}</span>
+              <span className="my-1 font-heading text-2xl font-normal text-gold-deep sm:my-1.5 sm:text-3xl">
                 &
               </span>
-              {weddingConfig.bride}
+              <span>{weddingConfig.bride}</span>
             </h1>
 
             <div className="mx-auto mt-10 flex max-w-lg flex-col items-center text-muted-foreground">
@@ -78,16 +81,18 @@ export function InvitationCard({ revealDelay = 0 }: InvitationCardProps) {
 
       <motion.div
         className="relative z-10 mt-12"
-        initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+        initial={instant ? false : { opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.5,
+          duration: instant ? 0 : 0.5,
           delay: timerDelay,
           ease: [0.22, 1, 0.36, 1],
         }}
       >
         <CountdownTimer targetTimestamp={weddingConfig.weddingTimestamp} />
       </motion.div>
+
+      <WeddingCalendar className="mt-10" revealDelay={calendarDelay} />
     </section>
   );
 }

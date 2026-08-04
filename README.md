@@ -7,6 +7,7 @@ Premium wedding invitation website built with Next.js 15, React 19, TypeScript, 
 ```bash
 npm install
 npm run dev
+cd /Users/muhammadhassaan/Documents/Card
 ```
 
 Open [http://localhost:3000](http://localhost:3000).

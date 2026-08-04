@@ -12,3 +12,4 @@ export { GlassCard, SectionHeading } from "@/components/invitation/section-headi
 export { SiteFooter } from "@/components/invitation/site-footer";
 export { TimelineSection } from "@/components/invitation/timeline-section";
 export { VenueSection } from "@/components/invitation/venue-section";
+export { WeddingCalendar } from "@/components/invitation/wedding-calendar";
